@@ -8,7 +8,7 @@ This custom type is a Lasso 8 an implementation of both the Rackspace Cloud File
 To contribute to this project, please visit the GitHub repository:
 https://github.com/stevepiercy/rackspace_cloud
 
-An article on this project and its documentation are published at:
+Documentation of and an article on this project are published at:
 http://www.stevepiercy.com/articles/rackspace-cloud-files-api-for-lasso
 
 [1] http://docs.rackspace.com/files/api/v1/cf-devguide/content/Overview-d1e70.html
@@ -272,80 +272,5 @@ define_type('rackspace_cloudfiles');
         /iterate;
         return(#result_map);
     /define_tag;
-
 /define_type;
-
-// =====================================================
-// testing code
-
-date;
-'<br>';
-'<br>';
-
-local('rax') = rackspace_cloudfiles(
-//    -service_type='object-store'
-    );
-#rax->getContainerCDNMetadata(-container='test')->find('X-Cdn-Uri');
-'<br>';
-#rax->getContainerDetailsListObjects()->get(1)->find('name');
-
-'<br>';
-'<br>';
-'<strong>auth_endpoint:</strong> ' + #rax->'auth_endpoint';
-'<br>';
-'<strong>auth_token:</strong> ' + #rax->'auth_token';
-'<br>';
-'<strong>container:</strong> ' + #rax->'container';
-'<br>';
-'<strong>fault_map:</strong> ' + #rax->'fault_map';
-'<br>';
-'<strong>http_method:</strong> ' + #rax->'http_method';
-'<br>';
-'<strong>internalURL:</strong> ' + #rax->'internalURL';
-'<br>';
-'<strong>mimeheaders:</strong> ' + #rax->'mimeheaders';
-'<br>';
-'<strong>publicURL:</strong> ' + #rax->'publicURL';
-'<br>';
-'<strong>query_params:</strong> ' + #rax->'query_params';
-'<br>';
-'<strong>region:</strong> ' + #rax->'region';
-'<br>';
-'<strong>request:</strong> ' + #rax->'request';
-'<br>';
-'<strong>response_type:</strong> ' + #rax->'response_type';
-'<br>';
-'<strong>service_type:</strong> ' + #rax->'service_type';
-'<br>';
-'<strong>tenantId:</strong> ' + #rax->'tenantId';
-'<br>';
-'<strong>versionInfo:</strong> ' + #rax->'versionInfo';
-'<br>';
-'<strong>versionList:</strong> ' + #rax->'versionList';
-'<br>';
-'<strong>versionId:</strong> ' + #rax->'versionId';
-'<br>';
-
-
-'<img src="' + #rax->getContainerCDNMetadata(-container='test')->find('X-Cdn-Uri')
-+ '/'
-+ #rax->getContainerDetailsListObjects()->get(1)->find('name')
-+ '">';
-
-/* 
-'<textarea rows="15" cols="80">';
-shell('curl -i -X HEAD https://cdn1.clouddrive.com/v1/MossoCloudFS_c40c59a4-013c-49f9-937d-afb384f7a1b1/test -H "X-Auth-Token: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-');
-'</textarea>';
-
- */
-
-/* 
-
-curl -i https://storage101.dfw1.clouddrive.com/v1/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/test -d format=json -d limit=5 -H "X-Auth-Token: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-
-curl -i https://storage101.dfw1.clouddrive.com/v1/XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX -d format=json -d limit=5 -H "X-Auth-Token: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-
-curl https://cdn1.clouddrive.com/v1/MossoCloudFS_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/test -I -H "X-Auth-Token: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
- */
 ]
