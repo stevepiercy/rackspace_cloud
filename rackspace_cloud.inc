@@ -1,4 +1,4 @@
-﻿[
+﻿<?lassoscript
 /* ===========================================================================
 
 Rackspace Cloud Files API for Lasso
@@ -273,4 +273,4 @@ define_type('rackspace_cloudfiles');
         return(#result_map);
     /define_tag;
 /define_type;
-]
+?>
