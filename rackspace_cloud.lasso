@@ -1,4 +1,4 @@
-﻿<?lassoscript
+﻿[
 /* ===========================================================================
 
 Rackspace Cloud Files API for Lasso
@@ -9,7 +9,7 @@ To contribute to this project, please visit the GitHub repository:
 https://github.com/stevepiercy/rackspace_cloud
 
 Documentation of and an article on this project are published at:
-http://www.stevepiercy.com/articles/rackspace-cloud-files-api-for-lasso
+http://www.stevepiercy.com/articles/rackspace_cloud-lasso-sdk-for-the-rackspace-cloud-files-api/
 
 [1] http://docs.rackspace.com/files/api/v1/cf-devguide/content/Overview-d1e70.html
 [2] http://docs.rackspace.com/auth/api/v2.0/auth-client-devguide/content/Overview-d1e65.html
@@ -273,4 +273,4 @@ define_type('rackspace_cloudfiles');
         return(#result_map);
     /define_tag;
 /define_type;
-?>
+]
