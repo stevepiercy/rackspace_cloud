@@ -74,6 +74,8 @@ define_type('rackspace_cloudfiles');
     !local_defined('query_params') ? local('query_params') = array;
     !local_defined('region') ? local('region') = string;
     !local_defined('request') ? local('request') = 'json';
+    // service_type represents the service type in the Rackspace service catalog
+    // http://docs.rackspace.com/auth/api/v2.0/auth-client-devguide/content/Service_Types-d1e265.html
     !local_defined('service_type') ? local('service_type') = string;
     
     // Set MIME headers to align with the request type.
@@ -108,21 +110,27 @@ define_type('rackspace_cloudfiles');
         local_defined('query_params') ? self->'query_params' = #query_params;
         local_defined('region') ? self->'region' = #region;
         local_defined('request') ? self->'request' = #request;
-        if(local_defined('response_type'));
-            if(lowercase(#response_type) == 'json');
-                self->'response_type' = string_lowercase(#response_type);
-            else;
-                return(#response_type + ' response_type not implemented. Use "json".');
-            /if;
-        /if;
+        // xml response_type not implemented
+        fail_if(
+            (local_defined('response_type')
+                && local('response_type') != 'json'),
+            -10000,
+            ('"' + #response_type + '" response_type not implemented. Use "json".'));
+        local_defined('response_type') ? self->'response_type' = string_lowercase(#response_type);
         local_defined('service_type') ? self->'service_type' = #service_type;
     /define_tag;
     
     define_tag('getAuthToken',
-        -description='Make a request to the Rackspace API to obtain an authentication token. If the response is successful, then instance variables are set for making subsequent requests. If the response fails, then the instance variable fault_map is set and becomes available to the user for troubleshooting.',
+        -description='Make a request to the Rackspace API to obtain an authentication token. If the response is successful, then the instance variable ``region`` is set and the method ``setAccess`` is called with the result. If the response fails, then the instance variable ``fault_map`` is set and becomes available to the developer for troubleshooting.',
         -optional='response_type',
         -optional='service_type');
         
+        // xml response_type not implemented
+        fail_if(
+            (local_defined('response_type')
+                && local('response_type') != 'json'),
+            -10000,
+            ('"' + #response_type + '" response_type not implemented. Use "json".'));
         local_defined('response_type') ? self->'response_type' = #response_type;
         local_defined('service_type') ? self->'service_type' = #service_type;
         local('result') = string;
@@ -133,7 +141,11 @@ define_type('rackspace_cloudfiles');
             -postparams=self->'data',
             -sendmimeheaders=self->'mimeheaders');
         #fault_code = error_code;
-        #result = decode_json(#result);
+        if(self->'response_type' != 'json');
+            return('"' + #response_type + '" response_type not implemented. Use "json".');
+        else;
+            #result = decode_json(#result);
+        /if;
         if(#fault_code == 0);
             return(self->setAccess(-result=#result, -region=self->'region'));
         else;
@@ -142,7 +154,9 @@ define_type('rackspace_cloudfiles');
     /define_tag;
     
     define_tag('getAuthFaults',
-        -description='This method parses the Lasso type containing result from the getAuthToken method.  Returns a map containing the element, message, and code of the HTTP response.',
+        -description='Used internally by the method ``getAuthToken``. Parses the result from ``getAuthToken`` if the response fails. Sets an instance variable ``fault_map``, which is a map containing the element, message, and code of the HTTP response.
+
+Currently only a JSON response type decode to a Lasso map object is supported. When the XML response type is implemented, then this method must be modified accordingly.',
         -required='result', -type='map');
         
         local('fault_element') = string;
@@ -164,7 +178,7 @@ define_type('rackspace_cloudfiles');
         self->'fault_map' = #fault_map;
     /define_tag;
     
-    define_tag('setAccess', -description="Parses a successful getAuthToken response. Sets instance variables for making calls to a specific Rackspace service's endpoints in a specific geographic region.",
+    define_tag('setAccess', -description="Used internally by the method ``getAuthToken``. Parses a successful ``getAuthToken`` response. Sets instance variables for making calls to a specific Rackspace service type's endpoints in a specific geographic region. The available instance variables depend on the service type. The currently implemented instance variables are ``auth_token`` (using the authentication token from the result of ``getAuthToken``), ``region`` (using the default region, none is provided), ``internalURL``, ``publicURL``, ``versionInfo``, ``versionList``, and ``versionId``.",
         -required='result');
         
         local('access_map') = map;
@@ -198,15 +212,18 @@ define_type('rackspace_cloudfiles');
         -optional='container', -type='string',
         -optional='query_params', -type='array',
         -optional='response_type', -type='string');
-        
+        // See documentation at:
+        // http://docs.rackspace.com/files/api/v1/cf-devguide/content/GET_listcontainerobjects_v1__account___container__containerServicesOperations_d1e000.html
         // override instance variables
         local_defined('container') ? self->'container' = #container;
         local_defined('query_params') ? self->'query_params' = #query_params;
+        // xml response_type not implemented
+        fail_if(
+            (local_defined('response_type')
+                && local('response_type') != 'json'),
+            -10000,
+            ('"' + #response_type + '" response_type not implemented. Use "json".'));
         local_defined('response_type') ? self->'response_type' = string_lowercase(#response_type);
-        
-        if(self->'response_type' != 'json');
-            return(self->'response_type' + ' response_type not implemented. Use JSON.');
-        /if;
         
         self->'service_type' = 'object-store';
         self->getAuthToken(-response_type=self->'response_type');
@@ -233,7 +250,8 @@ define_type('rackspace_cloudfiles');
     define_tag('getContainerCDNMetadata',
         -description='Gets metadata for a CDN-enabled container. Returns a map.',
         -optional='container', -type='string');
-        
+        // See documentation at:
+        // http://docs.rackspace.com/files/api/v1/cf-devguide/content/HEAD_retrieveCDNcontainermeta_v1__account___container__CDN_Container_Services-d1e2632.html
         // override instance variables
         local_defined('container') ? self->'container' = #container;
         self->'service_type' = 'rax:object-cdn';

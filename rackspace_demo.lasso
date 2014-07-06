@@ -10,7 +10,7 @@
 <h2>Instructions</h2>
 
 <p>
-<a href="http://www.stevepiercy.com/articles/">Follow installation instructions</a> to install the file <code>rackspace_cloud.inc</code> and its dependencies.
+<a href="http://www.stevepiercy.com/articles/">Follow installation instructions</a> to install the file <code>rackspace_cloud.lasso</code> and its dependencies.
 </p>
 
 <p>
